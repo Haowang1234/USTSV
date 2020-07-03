@@ -30,11 +30,13 @@ You can access ClassicModels at richardtwatson.com with accountid=db1 and passwo
  
 #### Prepare a list of offices sorted by country state city
 ```sql
-select officeCode from offices order by country, state, city;
+SELECT officeCode FROM offices ORDER BY country, state, city;
 ```
 
 #### How many employees are there in the company
 ```sql
-
+SELECT COUNT(DISTINCT employeeNumber) AS allemployee_Num FROM employees;
 ```
+
+
 
