@@ -25,3 +25,14 @@ You can access ClassicModels at richardtwatson.com with accountid=db1 and passwo
   - [13 Report the name and city of customers who don't have sales representatives?](#Report-the-name-and-city-of-customers-who-do-not-have-sales-representatives)
   - [14 What are the names of executives with VP or Manager in their title?](#What-are-the-names-of-executives-with-VP-or-Manager-in-their-title)
   - [15 Which orders have a value greater than $5,000?](#Which-orders-have-a-value-greater-than-5000)
+  
+  ## Single entity
+
+#### Prepare a list of offices sorted by country state city
+
+```sql
+SELECT DISTINCT officeCode
+FROM classicmodels.offices
+ORDER BY country, state, city;
+
+```
