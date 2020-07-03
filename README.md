@@ -43,5 +43,14 @@ SELECT COUNT(DISTINCT employeeNumber) AS allemployee_Num FROM employees;
 SELECT ROUND(SUM(amount),1) AS total_Pay FROM payments;
 ```
 #### List the product lines that contain Cars
+```sql
+solution1
+SELECT * FROM productlines WHERE productLine = 'Classic Cars' 
+OR  productLine = 'Vintage Cars';
+```
+```sql
+solution2
+SELECT * FROM productlines WHERE productLine LIKE '%Cars%';
+```
 
 
