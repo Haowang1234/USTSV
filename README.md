@@ -38,5 +38,10 @@ SELECT officeCode FROM offices ORDER BY country, state, city;
 SELECT COUNT(DISTINCT employeeNumber) AS allemployee_Num FROM employees;
 ```
 
+#### What is the total of payments received
+```sql
+SELECT ROUND(SUM(amount),1) AS total_Pay FROM payments;
+```
+#### List the product lines that contain Cars
 
 
