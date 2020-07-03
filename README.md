@@ -95,4 +95,23 @@ SELECT CONCAT(ROUND(AVG(MSRP/buyPrice),2) * 100, '%' ) AS markup_Per FROM produc
 SELECT COUNT(DISTINCT productCode) AS sell_Num FROM products;
 ```
 
+#### Report the name and city of customers who do not have sales representatives
+```sql
+SELECT customerName, city FROM customers WHERE salesRepEmployeeNumber is NULL;
+```
+
+#### What are the names of executives with VP or Manager in their title
+```sql
+SELECT CONCAT(firstname,' ', lastname) AS full_Name,jobTitle FROM employees WHERE jobTitle like '%VP%' 
+OR jobTitle like '%Manager%';
+```
+
+#### Which orders have a value greater than 5000
+```sql
+SELECT orderNumber, (priceEach * quantityOrdered) AS order_Value FROM orderdetails 
+WHERE priceEach * quantityOrdered > 5000 ORDER BY (priceEach * quantityOrdered) ASC;
+```
+
+
+
 
