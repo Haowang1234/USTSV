@@ -78,9 +78,21 @@ SELECT COUNT(DISTINCT productName) AS product_Count, productLine FROM products G
 ```sql
 SELECT min(amount) AS min_Pay FROM payments;
 ```
+
 #### List all payments greater than twice the average payment
 ```sql
 SELECT AVG(amount) AS avg_Price FROM payments;
 SELECT * FROM payments WHERE amount > 2 * (SELECT AVG(amount) AS avg_Price FROM payments);
 ```
+
+#### What is the average percentage markup of the MSRP on buyPrice
+```sql
+SELECT CONCAT(ROUND(AVG(MSRP/buyPrice),2) * 100, '%' ) AS markup_Per FROM products;
+```
+
+#### How many distinct products does ClassicModels sell
+```sql
+SELECT COUNT(DISTINCT productCode) AS sell_Num FROM products;
+```
+
 
