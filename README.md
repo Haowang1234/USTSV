@@ -128,7 +128,43 @@ WHERE priceEach * quantityOrdered > 5000 ORDER BY (priceEach * quantityOrdered) 
 
 #### Report the account representative for each customer
 ```sql
-
+SELECT customerName, CONCAT(employees.firstName,' ',employees.lastName) AS account_Name FROM customers INNER JOIN employees
+ON customers.salesRepEmployeeNumber = employees.employeeNumber;
 ```
 
+#### Report total payments for Atelier graphique
+```sql
+SELECT SUM(amount) AS total_Pay FROM payments INNER JOIN customers ON payments.customerNumber = customers.customerNumber 
+WHERE customers.customerName = 'Atelier graphique';
+```
 
+#### Report the total payments by date
+```sql
+SELECT ROUND(SUM(amount),2) AS total_Pay, paymentDate AS pay_Date FROM payments 
+GROUP BY paymentDate ORDER BY paymentDate ASC;
+```
+
+#### Report the products that have not been sold
+```sql
+SELECT productCode FROM orderdetails;
+SELECT * FROM products WHERE products.productCode NOT IN (SELECT productCode FROM orderdetails);
+```
+
+#### List the amount paid by each customer
+```sql
+SELECT ROUND(SUM(amount),2) AS each_Pay, customerName FROM customers 
+INNER JOIN payments ON customers.customerNumber = payments.customerNumber 
+GROUP BY payments.customerNumber;
+```
+
+#### How many orders have been placed by Herkku Gifts
+```sql
+SELECT COUNT(DISTINCT o.orderNumber) as Order_num
+FROM orders o JOIN customers c
+ON c.customerNumber = o.customerNumber AND c.customerName = 'Herkku Gifts';
+```
+
+#### Who are the employees in Boston
+```sql
+
+```
