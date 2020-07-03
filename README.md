@@ -42,6 +42,7 @@ SELECT COUNT(DISTINCT employeeNumber) AS allemployee_Num FROM employees;
 ```sql
 SELECT ROUND(SUM(amount),1) AS total_Pay FROM payments;
 ```
+
 #### List the product lines that contain Cars
 ```sql
 solution1
@@ -53,4 +54,33 @@ solution2
 SELECT * FROM productlines WHERE productLine LIKE '%Cars%';
 ```
 
+#### Report total payments for October 28 2004
+```sql
+SELECT ROUND(SUM(amount),1) AS total_Pay FROM payments WHERE paymentDate = '2004-10-28';
+```
+
+#### Report those payments greater than 100000 dollar
+```sql
+SELECT * FROM payments WHERE amount > 100000;
+```
+
+#### List the products in each product line
+```sql
+SELECT DISTINCT productName, productLine FROM products ORDER BY productLine;
+```
+
+#### How many products in each product line?
+```sql
+SELECT COUNT(DISTINCT productName) AS product_Count, productLine FROM products GROUP BY productLine;
+```
+
+#### What is the minimum payment received
+```sql
+SELECT min(amount) AS min_Pay FROM payments;
+```
+#### List all payments greater than twice the average payment
+```sql
+SELECT AVG(amount) AS avg_Price FROM payments;
+SELECT * FROM payments WHERE amount > 2 * (SELECT AVG(amount) AS avg_Price FROM payments);
+```
 
