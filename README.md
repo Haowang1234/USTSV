@@ -112,6 +112,23 @@ SELECT orderNumber, (priceEach * quantityOrdered) AS order_Value FROM orderdetai
 WHERE priceEach * quantityOrdered > 5000 ORDER BY (priceEach * quantityOrdered) ASC;
 ```
 
+- [One to many relationship](#One-to-many-relationship)
+  - [1 Report the account representative for each customer](#Report-the-account-representative-for-each-customer)
+  - [2 Report total payments for Atelier graphique](#Report-total-payments-for-Atelier-graphique)
+  - [3 Report the total payments by date](#Report-the-total-payments-by-date)
+  - [4 Report the products that have not been sold](#Report-the-products-that-have-not-been-sold)
+  - [5 List the amount paid by each customer](#List-the-amount-paid-by-each-customer)
+  - [6 How many orders have been placed by Herkku Gifts?](#How-many-orders-have-been-placed-by-Herkku-Gifts)
+  - [7 Who are the employees in Boston?](#Who-are-the-employees-in-Boston)
+  - [8 Report those payments greater than $100,000](#Report-those-payments-greater-than-100000-dollar)
+  - [9 List the value of 'On Hold' orders](#List-the-value-of-On-Hold-orders)
+  - [10 Report the number of orders 'On Hold' for each customer](#Report-the-number-of-orders-On-Hold-for-each-customer)
+  
+## One to many relationship
 
+#### Report the account representative for each customer
+```sql
+
+```
 
 
