@@ -159,12 +159,37 @@ GROUP BY payments.customerNumber;
 
 #### How many orders have been placed by Herkku Gifts
 ```sql
-SELECT COUNT(DISTINCT o.orderNumber) as Order_num
-FROM orders o JOIN customers c
-ON c.customerNumber = o.customerNumber AND c.customerName = 'Herkku Gifts';
+SELECT COUNT(DISTINCT o.orderNumber) FROM orders o INNER JOIN customers c ON o.customerNumber = c.customerNumber
+WHERE c.customerName = 'Herkku Gifts';
 ```
 
 #### Who are the employees in Boston
 ```sql
-
+SELECT CONCAT(e.firstName,' ',e.lastName) AS employee_Name FROM employees e INNER JOIN offices o 
+ON e.officeCode= o.officeCode
+WHERE o.city = 'Boston';
 ```
+
+#### Report those payments greater than 100000 dollar
+```sql
+SELECT c.customerNumber, c.customerName, p.checkNumber, p.paymentDate, p.amount AS high_Pay 
+FROM payments p INNER JOIN customers c 
+ON c.customerNumber = p.customerNumber
+WHERE p.amount > 100000;
+```
+
+#### List the value of On Hold orders
+```sql
+SELECT ROUND((od.priceEach * od.quantityOrdered),2) AS order_values, o.status FROM orders o INNER JOIN orderdetails od 
+ON o.orderNumber = od.orderNumber
+WHERE o.status = 'On Hold';
+```
+
+#### Report the number of orders On Hold for each customer
+```sql
+SELECT COUNT(DISTINCT o.status) AS order_number, c.customerName, o.status FROM orders o INNER JOIN customers c
+ON o.customerNumber = c.customerNumber
+WHERE o.status = 'On Hold'
+GROUP BY c.customerNumber;
+```
+
