@@ -31,5 +31,5 @@ You can access ClassicModels at richardtwatson.com with accountid=db1 and passwo
 #### Prepare a list of offices sorted by country state city
 
 ```sql
-
+select officeCode from offices order by country, state, city;
 ```
