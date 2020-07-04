@@ -404,7 +404,64 @@ SELECT productVendor FROM products WHERE productVendor LIKE '%Diecast';
   
 #### Who is at the top of the organization 
 ```sql
-
+SELECT e.employeeNumber, CONCAT(firstName,' ',lastName) AS full_Name FROM employees e  WHERE reportsTo is NULL;
 ```
+
+#### Who reports to William Patterson
+```sql
+-- 主要体现复制两个表的思路 reportto_number = employe_enumber
+SELECT e1.employeeNumber, CONCAT(e1.firstName,' ',e1.lastName) AS full_Name FROM employees e1, employees e2
+WHERE e1.reportsTo = e2.employeeNumber
+AND e2.firstName = 'William'
+AND e2.lastName = 'Patterson';
+```
+
+#### List all the products purchased by Herkku Gifts
+```sql
+SELECT  DISTINCT od.productCode, p.productName FROM customers c, orders o, orderdetails od, products p
+WHERE c.customerNumber = o.customerNumber
+AND o.orderNumber = od.orderNumber
+AND od.productCode = p.productCode
+AND c.customerName = 'Herkku Gifts';
+```
+
+#### Compute the commission for each sales representative
+```sql
+-- commission 代表佣金 这题不需要用 title = sales rep 仔细推敲下
+-- Assuming the commission is 5% of the value of an order. Sort by employee last name and first name
+SELECT CONCAT(e.firstName,' ',e.lastName) AS full_Name, 
+ROUND(SUM((quantityOrdered * priceEach) * 0.05),2) AS sales_commission
+FROM employees e, customers c, orders o, orderdetails od
+WHERE e.employeeNumber = c.salesRepEmployeeNumber
+AND c.customerNumber = o.customerNumber
+AND o.orderNumber = od.orderNumber
+GROUP BY e.firstName, e.lastName
+ORDER BY e.lastName, e.firstName ASC;
+```
+
+#### what is the difference in days between the most recent and oldest order date in the Orders file
+```sql
+-- 注意时间函数DAY()的用法
+SELECT DAY(MAX(orderDate) - MIN(orderDate)) AS biggest_Dif FROM orders;
+```
+
+#### Compute the average time between order date and ship date for each customer ordered by the largest difference
+```sql
+-- 计算的是每一组的平均差值排序 不是最大最小值的极差
+SELECT ROUND(AVG(DAY(o.shippedDate - o.orderDate)),0) AS day_Diff, c.customerName
+FROM orders o, customers c
+WHERE c.customerNumber = o.customerNumber
+GROUP BY c.customerNumber
+ORDER BY day_Diff DESC;
+```
+
+#### What is the value of orders shipped in August 2004
+```sql
+SELECT SUM(quantityOrdered * priceEach) AS ship_Value 
+FROM orders o, orderdetails od
+WHERE o.orderNumber = od.orderNumber
+AND o.shippedDate LIKE '%2004-08%';
+```
+
 
 
