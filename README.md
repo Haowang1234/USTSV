@@ -202,18 +202,6 @@ GROUP BY c.customerNumber;
   - [6 Reports those products that have been sold with a markup of 100% or more](#Reports-those-products-that-have-been-sold-with-a-markup-of-1-or-more)
   - [7 List the products ordered on a Monday](#List-the-products-ordered-on-a-Monday)
   - [8 What is the quantity on hand for products listed on 'On Hold' orders?](#What-is-the-quantity-on-hand-for-products-listed-on-On-Hold-orders)
-- [Regular expressions](#Regular-expressions)
-  - [1 Find products containing the name 'Ford'](#Find-products-containing-the-name-Ford)
-  - [2 List products ending in 'ship'](#List-products-ending-in-ship)
-  - [3 Report the number of customers in Denmark, Norway, and Sweden](#Report-the-number-of-customers-in-Denmark-Norway-and-Sweden)
-  - [4 What are the products with a product code in the range S700_1000 to S700_1499?](#What-are-the-products-with-a-product-code-in-the-range-S700-1000-to-S700-1499)
-  - [5 Which customers have a digit in their name?](#Which-customers-have-a-digit-in-their-name)
-  - [6 List the names of employees called Dianne or Diane](#List-the-names-of-employees-called-Dianne-or-Diane)
-  - [7 List the products containing ship or boat in their product name](#List-the-products-containing-ship-or-boat-in-their-product-name)
-  - [8 List the products with a product code beginning with S700](#List-the-products-with-a-produc-code-beginning-with-S700)
-  - [9 List the names of employees called Larry or Barry](#List-the-names-of-employees-called-Larry-or-Barry)
-  - [10 List the names of employees with non-alphabetic characters in their names](#List-the-names-of-employees-with-non-alphabetic-characters-in-their-names)
-  - [11 List the vendors whose name ends in Diecast](#List-the-vendors-whose-name-ends-in-Diecast)
   
    ## Many-to-many-relationship
  
