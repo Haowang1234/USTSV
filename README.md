@@ -234,5 +234,30 @@ HAVING cu_value > 25000;
 
 #### Are there any products that appear on all orders
 ```sql
+???
+SELECT p.productCode, productName FROM products p, orders o, orderdetails od
+WHERE p.productCode = od.productCode
+AND o.orderNumber = od.orderNumber
+AND o.orderNumber IN (SELECT orderNumber FROM orders); 
+```
+
+#### List the names of products sold at less than eighty percent of the MSRP
+```sql
+SELECT productName, ROUND((priceEach/MSRP),2) AS ratio FROM products p, orderdetails od
+WHERE od.productCode = p.productCode
+AND priceEach/MSRP < 0.8;
+```
+
+#### Reports those products that have been sold with a markup of 1 or more
+```sql
+SELECT DISTINCT orderNumber, productName, ROUND(((priceEach - buyPrice)/buyPrice),2) AS markup 
+FROM products p, orderdetails od
+WHERE od.productCode = p.productCode
+AND (priceEach - buyPrice)/buyPrice > 1;
+```
+
+#### List the products ordered on a Monday
+```sql
 
 ```
+
