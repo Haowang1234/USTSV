@@ -203,7 +203,7 @@ GROUP BY c.customerNumber;
   - [7 List the products ordered on a Monday](#List-the-products-ordered-on-a-Monday)
   - [8 What is the quantity on hand for products listed on 'On Hold' orders?](#What-is-the-quantity-on-hand-for-products-listed-on-On-Hold-orders)
   
-   ## Many-to-many-relationship
+## Many-to-many-relationship
  
 #### List-products-sold-by-order-date
 ```sql
@@ -288,7 +288,7 @@ AND o.status = 'On Hold';
   - [10 List the names of employees with non-alphabetic characters in their names](#List-the-names-of-employees-with-non-alphabetic-characters-in-their-names)
   - [11 List the vendors whose name ends in Diecast](#List-the-vendors-whose-name-ends-in-Diecast)
   
-     ## Regular-expressions
+## Regular-expressions
  
 #### Find products containing the name Ford
 ```sql
@@ -400,7 +400,7 @@ SELECT productVendor FROM products WHERE productVendor LIKE '%Diecast';
   - [27 Find the products sold in 2003 but not 2004](#Find-the-products-sold-in-2003-but-not-2004)
   - [28 Find the customers without payments in 2003](#Find-the-customers-without-payments-in-2003)
   
-  ## General queries
+## General queries
   
 #### Who is at the top of the organization 
 ```sql
