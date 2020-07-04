@@ -323,7 +323,6 @@ OR customerName LIKE '%1%' OR customerName LIKE '%2%' OR customerName LIKE '%3%'
 OR customerName LIKE '%5%' OR customerName LIKE '%6%' OR customerName LIKE '%7%' OR customerName LIKE '%8%'
 OR customerName LIKE '%9%';
 ```
-
 ```sql
 solution2
 SELECT * FROM 
@@ -331,6 +330,45 @@ customers
 WHERE customerName REGEXP '[0-9]';
 ```
 
+#### List the names of employees called Dianne or Diane
+```sql
+select CONCAT(firstName,' ',lastName) AS full_Name from employees WHERE firstName LIKE '%Dianne%'
+OR firstName LIKE '%Diane%'
+OR lastName LIKE '%Dianne%'
+OR lastName LIKE '%Diane%';
+```
+
+#### List the products containing ship or boat in their product name
+```sql
+SELECT * FROM products WHERE productName LIKE '%ship%'
+OR productName LIKE '%boat%';
+```
+
+#### List the products with a product code beginning with S700
+```sql
+SELECT * FROM products WHERE productCode LIKE 'S700%';
+```
+
+#### List the names of employees called Larry or Barry
+```sql
+select CONCAT(firstName,' ',lastName) AS full_Name from employees WHERE firstName LIKE '%Larry%'
+OR firstName LIKE '%Barry%'
+OR lastName LIKE '%Larry%'
+OR lastName LIKE '%Barry%';
+```
+
+#### List the names of employees with non alphabetic characters in their names
+```sql
+SELECT CONCAT(firstName,' ',lastName) AS full_Name FROM employees 
+WHERE firstName NOT LIKE '%[^a-z]%'
+OR lastName NOT LIKE '%[^a-z]%';
+```
+
+#### List the vendors whose name ends in Diecast
+```sql
+SELECT productVendor FROM products WHERE productVendor LIKE '%Diecast';
+-- Vendors代表供应商
+```
 
 
 
