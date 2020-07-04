@@ -290,7 +290,47 @@ AND o.status = 'On Hold';
   
      ## Regular-expressions
  
-#### Find-products-containing-the-name-Ford
+#### Find products containing the name Ford
 ```sql
-
+SELECT * FROM products WHERE productName LIKE '%Ford%';
 ```
+
+#### List products ending in ship
+```sql
+SELECT * FROM products WHERE productName LIKE '%ship';
+```
+
+#### Report the number of customers in Denmark Norway and Sweden
+```sql
+SELECT COUNT(customerNumber) AS customer_num FROM customers
+WHERE country = 'Sweden' 
+OR country = 'Denmark' 
+OR country = 'Norway';
+```
+
+#### What are the products with a product code in the range S700_1000 to S700_1499
+```sql
+SELECT  DISTINCT productName,p.productCode FROM orderdetails od, products p 
+WHERE od.productCode = p.productCode
+AND p.productCode BETWEEN 'S700_1000' AND 'S700_1499';
+```
+
+#### Which customers have a digit in their name
+```sql
+solution1
+SELECT * FROM customers WHERE customerName LIKE '%0%'
+OR customerName LIKE '%1%' OR customerName LIKE '%2%' OR customerName LIKE '%3%' OR customerName LIKE '%4%' 
+OR customerName LIKE '%5%' OR customerName LIKE '%6%' OR customerName LIKE '%7%' OR customerName LIKE '%8%'
+OR customerName LIKE '%9%';
+```
+
+```sql
+solution2
+SELECT * FROM 
+customers
+WHERE customerName REGEXP '[0-9]';
+```
+
+
+
+
