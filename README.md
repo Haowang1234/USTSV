@@ -207,5 +207,32 @@ GROUP BY c.customerNumber;
  
 #### List-products-sold-by-order-date
 ```sql
+SELECT o.orderNumber, od.productCode, p.productName, o.orderDate FROM orders o, orderdetails od, products p
+WHERE o.orderNumber = od.orderNumber 
+AND od.productCode = p.productCode
+ORDER BY o.orderDate ASC;
+```
+
+#### List the order dates in descending order for orders for the 1940 Ford Pickup Truck
+```sql
+SELECT o.orderNumber, p.productName, o.orderDate FROM orders o, orderdetails od, products p 
+WHERE od.orderNumber = o.orderNumber
+AND p.productCode = od.productCode
+AND productName = '1940 Ford Pickup Truck'
+ORDER BY o.orderDate DESC;
+```
+
+#### List the names of customers and their corresponding order number where a particular order from that customer has a value greater than 25000 dollar
+```sql
+SELECT c.customerName, o.orderNumber, ROUND(SUM(quantityOrdered * priceEach),2) AS cu_value
+FROM orders o, customers c, orderdetails od 
+WHERE o.customerNumber = c.customerNumber 
+AND od.orderNumber = o.orderNumber
+GROUP BY od.orderNumber
+HAVING cu_value > 25000;
+```
+
+#### Are there any products that appear on all orders
+```sql
 
 ```
