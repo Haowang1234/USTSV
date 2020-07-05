@@ -531,7 +531,7 @@ ORDER BY percentage DESC;
 ```
 #### Write a function to convert miles per gallon to liters per 100 kilometers
 ```sql
-???
+-- DETERMINISTIC是确定的，意思就是写入binlog的时候，写入的是一个指定的常量；如unix_timestamp()获取到的值是1，可能写入binlog的时候，unix_timestamp()获取到的时间戳却成了3了,这个时候会出现数据不一致问题,所以引入了DETERMINISTIC
 -- 需要掌握自己写方程的步骤
 CREATE FUNCTION `Convert_mg_to_kl` (mg INT)
 RETURNS INT
@@ -547,5 +547,12 @@ END
 #### Write a procedure to increase the price of a specified product category by a given percentage. 
 You will need to create a product table with appropriate data to test your procedure. Alternatively, load the ClassicModels database on your personal machine so you have complete access. You have to change the DELIMITER prior to creating the procedure.
 ```sql
--- delimiter表示定界符的意思
+???没有设置定界符
+-- delimiter表示定界符的意思 需要修改默认设置重新定义
+CREATE DEFINER=`root`@`localhost` PROCEDURE `increase_price`(IN product_name VARCHAR(70), percentage DECIMAL)
+BEGIN
+UPDATE product
+SET buyPrice = buyPrice * (1 + percentage)
+WHERE productName = product_name;
+END
 ```
