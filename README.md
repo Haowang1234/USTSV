@@ -463,5 +463,48 @@ WHERE o.orderNumber = od.orderNumber
 AND o.shippedDate LIKE '%2004-08%';
 ```
 
+#### Compute the total value ordered, total amount paid and their difference for each customer for orders placed in 2004 and payments received in 2004 
+Hint; Create views for the total paid and total ordered).
+```sql
+-- 注意view 创建和删除的用法 
+-- 第一个是create value ordered
+DROP VIEW IF EXISTS order_Value;
 
+CREATE VIEW order_Value AS
+SELECT SUM(quantityOrdered * priceEach) AS order_Value, customerNumber FROM orders o, orderdetails od
+WHERE o.orderNumber = od.orderNumber
+AND YEAR(o.orderDate) = '2004'
+GROUP BY customerNumber
+ORDER BY customerNumber;
+
+-- 第二个是create amount paid
+DROP VIEW IF EXISTS amount_Paid;
+
+CREATE VIEW amount_Paid AS
+SELECT SUM(amount) AS amount_Paid, customerNumber FROM payments p
+WHERE YEAR(paymentDate) = '2004'
+GROUP BY customerNumber
+ORDER BY customerNumber;
+
+-- 第三个是create amount paid
+
+-- solution1 两个view差值取出来
+SELECT order_Value - amount_Paid AS diff, tp.customerNumber
+FROM amount_Paid tp, order_Value td
+WHERE tp.customerNumber = tp.customerNumber
+GROUP BY tp.customerNumber;
+
+-- solution2 create total_Dif
+DROP VIEW  IF EXISTS total_Dif;
+
+CREATE VIEW total_Dif AS
+SELECT SUM(quantityOrdered * priceEach) AS order_Value, o.customerNumber, 
+SUM(amount) AS amount_Paid, o.customerNumber,
+SUM(quantityOrdered * priceEach - amount) AS total_Dif
+FROM orders o, orderdetails od, payments p
+WHERE o.orderNumber = od.orderNumber
+AND YEAR(o.orderDate) = '2004'
+GROUP BY o.customerNumber
+ORDER BY o.customerNumber;
+```
 
