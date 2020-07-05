@@ -531,5 +531,21 @@ ORDER BY percentage DESC;
 ```
 #### Write a function to convert miles per gallon to liters per 100 kilometers
 ```sql
+???
+-- 需要掌握自己写方程的步骤
+CREATE FUNCTION `Convert_mg_to_kl` (mg INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+DECLARE kl INT;
+SET kl = 0;
+SET kl = mg / 3.78541 * 1.60934 / 100;
+RETURN kl;
+END
+```
 
+#### Write a procedure to increase the price of a specified product category by a given percentage. 
+You will need to create a product table with appropriate data to test your procedure. Alternatively, load the ClassicModels database on your personal machine so you have complete access. You have to change the DELIMITER prior to creating the procedure.
+```sql
+-- delimiter表示定界符的意思
 ```
