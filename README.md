@@ -508,3 +508,28 @@ GROUP BY o.customerNumber
 ORDER BY o.customerNumber;
 ```
 
+#### List the employees who report to those employees who report to Diane Murphy
+Use the CONCAT function to combine the employee's first name and last name into a single field for reporting
+```sql
+SELECT CONCAT(e1.firstName,' ',e1.lastName) AS full_Name, 
+CONCAT(e2.firstName,' ',e2.lastName) AS report_To,
+CONCAT(e3.firstName,' ',e3.lastName) AS top_Level
+FROM employees e1, employees e2, employees e3
+WHERE e1.reportsTo = e2.employeeNumber
+AND e2.reportsTo = e3.employeeNumber
+AND e3.firstName = 'Diane'
+AND e3.lastName = 'Murphy';
+```
+
+#### What is the percentage value of each product in inventory sorted by the highest percentage first
+```sql
+-- 把子语句作为一个表来搜索查询
+
+SELECT CONCAT(ROUND(((quantityInStock/t.total_Inventory) * 100),2), '%') AS percentage, p.productCode, p.productName
+fROM products p, (SELECT SUM(quantityInStock) AS total_Inventory FROM products) AS t
+ORDER BY percentage DESC;
+```
+#### Write a function to convert miles per gallon to liters per 100 kilometers
+```sql
+
+```
