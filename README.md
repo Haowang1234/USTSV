@@ -799,7 +799,14 @@ ORDER BY p.paymentDate)
 ORDER BY p.paymentDate;
 ```
 
+- [Correlated subqueries](#Correlated-subqueries)
+  - [1 Who reports to Mary Patterson](#Who-reports-to-Mary-Patterson)
+  - [2 Which payments in any month and year are more than twice the average for that month and year](#Which-payments-in-any-month-and-year-are-more-than-twice-the-average-for-that-month-and-year)
+  - [3 The percentage value of each product stock on hand as a percentage of the stock on hand for product line to which it belongs](#The-percentage-value-of-each-product-stock-on-hand-as-a-percentage-of-the-stock-on-hand-for-product-line-to-which-it-belongs)
+  - [4 For orders containing more than two products, report those products that constitute more than 50% of the value of the order](#For-orders-containing-more-than-two-products-and-report-those-products-that-constitute-more-than-50-percent-of-the-value-of-the-order)
+
 ## Correlated subqueries
+
 #### Who reports to Mary Patterson
 ```sql
 
