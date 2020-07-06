@@ -809,6 +809,67 @@ ORDER BY p.paymentDate;
 
 #### Who reports to Mary Patterson
 ```sql
-
+SELECT e1.employeeNumber, CONCAT(e1.firstName,' ',e1.lastName) AS full_Name, e1.reportsTo FROM employees e1, employees e2
+WHERE e1.reportsTo = e2.employeeNumber
+AND e2.firstName = 'Mary'
+AND e2.lastName = 'Patterson';
 ```
 
+#### Which payments in any month and year are more than twice the average for that month and year
+(i.e. compare all payments in Oct 2004 with the average payment for Oct 2004)? Order the results by the date of the payment. You will need to use the date functions.
+```sql
+SELECT p.checkNumber, YEAR(p.paymentDate) AS yr, MONTH(p.paymentDate) as mt, p.amount AS above_Avg, p1.avg
+FROM payments p, (SELECT YEAR(paymentDate) AS year, MONTH(paymentDate) AS month, AVG(amount) AS avg FROM payments 
+GROUP BY year, month) AS p1
+WHERE p.amount > 2 * p1.avg
+AND YEAR(p.paymentDate) = p1.year
+AND MONTH(p.paymentDate) = p1.month
+GROUP BY yr, mt
+ORDER BY yr ASC, mt ASC;
+```
+
+#### The percentage value of each product stock on hand as a percentage of the stock on hand for product line to which it belongs
+Order the report by product line and percentage value within product line descending. Show percentages with two decimal places
+```sql
+SELECT CONCAT(ROUND(p.quantityInStock / p1.quantity_Productline * 100, 2), '%') AS quantity_Percenntage, p.productName, p1.productLine 
+FROM products p,
+(SELECT ROUND(SUM(p.quantityInStock),2) AS quantity_Productline, po.productLine FROM products p, productlines po
+WHERE p.productLine = po.productLine
+GROUP BY po.productLine) AS p1
+WHERE p1.productLine = p.productLine
+GROUP BY p.productLine, p.productName
+ORDER BY p.productLine, quantity_Percenntage DESC;
+```
+
+#### For orders containing more than two products and report those products that constitute more than 50 percent of the value of the order
+```sql
+SELECT o.productCode, o.orderNumber, Tab1.Value_Sum, ROUND((o.quantityOrdered * o.priceEach),2) AS product_Value
+FROM orderdetails o,
+(SELECT SUM(od.quantityOrdered * od.priceEach) AS Value_Sum, COUNT(DISTINCT productCode) AS count, o.orderNumber 
+FROM orders o, orderdetails od
+WHERE o.orderNumber = od.orderNumber
+GROUP BY o.orderNumber
+HAVING count > 2
+ORDER BY o.orderNumber) Tab1
+WHERE o.orderNumber = Tab1.orderNumber
+AND o.priceEach * o.quantityOrdered > 0.5 * Tab1.Value_Sum
+GROUP BY o.orderNumber
+ORDER BY o.orderNumber;
+```
+
+- [Spatial data](#Spatial-data)
+  - [1 Which customers are in the Southern Hemisphere](#Which-customers-are-in-the-Southern-Hemisphere)
+  - [2 Which US customers are south west of the New York office](#Which-US-customers-are-south-west-of-the-New-York-office)
+  - [3 Which customers are closest to the Tokyo office](#Which-customers-are-closest-to-the-Tokyo-office)
+  - [4 Which French customer is furthest from the Paris office](#Which-French-customer-is-furthest-from-the-Paris-office)
+  - [5 Who is the northernmost customer](#Who-is-the-northernmost-customer)
+  - [6 What is the distance between the Paris and Boston offices](#What-is-the-distance-between-the-Paris-and-Boston-offices)
+  
+## Spatial data
+The Offices and Customers tables contain the latitude and longitude of each office and customer in officeLocation and customerLocation, respectively, in POINT format. Conventionally, latitude and longitude and reported as a pair of points, with latitude first.
+A **negative latitude** means **South** of the Equator, and a **negative longitude** means **West** of the Prime Meridian
+
+#### Which customers are in the Southern Hemisphere
+```sql
+
+```
