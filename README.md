@@ -865,11 +865,19 @@ ORDER BY o.orderNumber;
   - [5 Who is the northernmost customer](#Who-is-the-northernmost-customer)
   - [6 What is the distance between the Paris and Boston offices](#What-is-the-distance-between-the-Paris-and-Boston-offices)
   
-## Spatial data
-The Offices and Customers tables contain the latitude and longitude of each office and customer in officeLocation and customerLocation, respectively, in POINT format. Conventionally, latitude and longitude and reported as a pair of points, with latitude first.
-A **negative latitude** means **South** of the Equator, and a **negative longitude** means **West** of the Prime Meridian
+## Spatial data(空间数据)
+The Offices and Customers tables contain the latitude(纬度) and longitude(经度) of each office and customer in officeLocation and customerLocation, respectively, in POINT format. Conventionally, latitude and longitude and reported as a pair of points, with latitude first.
+A **negative latitude** means **South** of the Equator(赤道), and a **negative longitude** means **West** of the Prime Meridian(子午线)
 
-#### Which customers are in the Southern Hemisphere
+#### Which customers are in the Southern Hemisphere(南半球)
+ST_X(代表纬度) ST_Y(代表经度)
+```sql
+SELECT ST_X(customerLocation) AS Latitude, customerName
+FROM classicmodels.customers
+WHERE  ST_X(customerLocation) < 0;
+```
+
+#### Which US customers are south west of the New York office
 ```sql
 
 ```
