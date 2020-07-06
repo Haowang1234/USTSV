@@ -551,8 +551,113 @@ You will need to create a product table with appropriate data to test your proce
 -- delimiter表示定界符的意思 需要修改默认设置重新定义
 CREATE DEFINER=`root`@`localhost` PROCEDURE `increase_price`(IN product_name VARCHAR(70), percentage DECIMAL)
 BEGIN
-UPDATE product
+UPDATE products
 SET buyPrice = buyPrice * (1 + percentage)
 WHERE productName = product_name;
 END
+```
+
+#### What is the value of orders shipped in August 2004
+```sql
+-- solution1 与 solution2答案不一样
+
+solution1
+
+SELECT SUM(table1.shipped_Value) AS total_Value FROM
+(SELECT SUM(quantityOrdered * priceEach) AS shipped_Value, shippedDate FROM orders o, orderdetails od
+WHERE o.orderNumber = od.orderNumber
+AND shippedDate BETWEEN '2004-08-01' AND '2004-08-31'
+GROUP BY shippedDate
+ORDER BY shippedDate) AS table1;
+
+solution2
+
+SELECT ROUND(SUM(quantityOrdered * priceEach),2) AS od_shipped FROM(
+SELECT YEAR(o.shippedDate) AS YR, od.quantityOrdered, od.priceEach
+FROM orderdetails od, orders o
+WHERE od.orderNumber = o.orderNumber) AS TB1
+WHERE YR = 2004;
+```
+
+#### What is the ratio the value of payments made to orders received for each month of 2004
+(i.e., divide the value of payments made by the orders received)
+```sql
+SELECT MONTH(o.orderDate) AS MONTH, ROUND(SUM(p.amount) / SUM(od.quantityOrdered * od.priceEach),2) AS month_Ratio
+FROM payments p, orders o, orderdetails od
+WHERE p.customerNumber = o.customerNumber
+AND o.orderNumber = od.orderNumber
+AND YEAR(o.orderDate) = '2004'
+AND YEAR(p.paymentDate) = '2004'
+AND MONTH(o.orderDate) = MONTH(p.paymentDate)
+GROUP BY MONTH(o.orderDate)
+ORDER BY MONTH;
+```
+
+#### What is the difference in the amount received for each month of 2004 compared to 2003
+```sql
+SELECT ROUND((SUM(od4.quantityOrdered * od4.priceEach) - SUM(od3.quantityOrdered * od3.priceEach)),2) AS amount_Diff, 
+MONTH(o3.orderDate) AS MONTH
+FROM orders o3, orders o4, orderdetails od3, orderdetails od4
+WHERE o3.orderNumber = od3.orderNumber
+AND o4.orderNumber = od4.orderNumber
+AND YEAR(o3.orderDate) = '2003'
+AND YEAR(o4.orderDate) = '2004'
+AND MONTH(o3.orderDate) = MONTH(o4.orderDate)
+GROUP BY MONTH(o3.orderDate)
+ORDER BY MONTH;
+```
+
+#### Write a procedure to report the amount ordered in a specific month and year for customers containing a specified character string in their name
+-- locate(substr,str)
+   含义:返回子串 substr 在字符串 str 中第一次出现的位置。如果子串 substr 在 str 中不存在，返回值为 0
+   eg: 存在子串,locate('jd','jdgood')=1
+   不存在子串,locate('jd','jingdong')=0
+   原文链接：https://blog.csdn.net/u011900448/article/details/52176311
+```sql
+CREATE DEFINER=`root`@`localhost` PROCEDURE `amount_Order`(IN month INT, year YEAR, customer VARCHAR(50))
+BEGIN
+SELECT ROUND(SUM(od.quantityOrdered * od.priceEach),2) AS amount, customerName, year, month
+FROM orders o, orderdetails od, customers c
+WHERE o.orderNumber = od.orderNumber
+AND o.customerNumber = c.customerNumber
+AND MONTH(orderDate) = month
+AND year = YEAR(orderDate)
+AND LOCATE(customer, c.customerName) != 0
+GROUP BY customerName;
+END
+```
+
+#### Write a procedure to change the credit limit of all customers in a specified country by a specified percentage
+```sql
+CREATE DEFINER=`root`@`localhost` PROCEDURE `change_Limit`(IN country VARCHAR(70), percentage DECIMAL)
+BEGIN
+UPDATE customers
+SET creditLimit = creditLimit * (1 + percentage)
+WHERE country = customers.country;
+END
+```
+
+#### Report the names of products that appear in the same order ten or more times
+Basket of goods analysis: A common retail analytics task is to analyze each basket or order to learn what products are often purchased together
+-- solution1,2结果不一样
+solution1
+```sql
+SELECT COUNT(p.productCode) AS show_Time, p.productCode, p.productName, od.orderNumber
+FROM  orderdetails od, products p
+WHERE od.productCode = p.productCode
+GROUP BY od.orderNumber
+HAVING COUNT(p.productCode) >= 10
+ORDER BY show_Time DESC;
+```
+
+solution2
+```sql
+SELECT DISTINCT productName, TB1.prod_count, productCode, productName FROM(
+SELECT DISTINCT pd.productName, od1.productCode, od1.orderNumber, COUNT( od1.productCode) as prod_count 
+FROM orderdetails od1
+INNER JOIN orderdetails od ON od.orderNumber = od1.orderNumber
+INNER JOIN products pd ON pd.productCode = od1.productCode
+GROUP BY od1.productCode, od1.orderNumber
+HAVING COUNT(od1.productCode) >= 10 ) AS TB1
+ORDER BY TB1.prod_count DESC;
 ```
