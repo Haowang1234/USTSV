@@ -872,7 +872,7 @@ A **negative latitude** means **South** of the Equator(赤道), and a **negative
 #### Which customers are in the Southern Hemisphere(南半球)
 ST_X(代表纬度) ST_Y(代表经度)
 ```sql
-SELECT ST_X(customerLocation) AS Latitude, customerName
+SELECT ST_X(customerLocation) AS Latitude, ST_Y(customerLocation) AS Longitude, customerName
 FROM classicmodels.customers
 WHERE  ST_X(customerLocation) < 0;
 ```
@@ -880,7 +880,7 @@ WHERE  ST_X(customerLocation) < 0;
 #### Which US customers are south west of the New York office
 ```sql
 SELECT ST_X(customerLocation) AS Latitude, ST_Y(customerLocation) AS Longitude, customerName, o.state
-FROM customers , Offices o
+FROM classicmodels.customers c, Offices o
 WHERE  ST_X(customerLocation) < ST_X(officeLocation)
 AND ST_Y(customerLocation) < ST_Y(officeLocation)
 AND o.state = 'NY';
@@ -888,32 +888,35 @@ AND o.state = 'NY';
 
 #### Which customers are closest to the Tokyo office 
 (i.e., closer to Tokyo than any other office)
+
+To be precise for long distances, the distance in kilometers, as the crow flies, between two points when you have latitude and longitude, is (ACOS(SIN(lat1*PI()/180)*SIN(lat2*PI()/180)+COS(lat1*PI()/180)*COS(lat2*PI()/180)* COS((lon1-lon2)*PI()/180))*180/PI())*60*1.8532(有经纬度计算两点间的距离)
+
 ```sql
-SELECT ROUND(MIN(ACOS(SIN(lat1*PI()/180)*SIN(lat2*PI()/180)+COS(lat1*PI()/180)*COS(lat2*PI()/180)* COS((lon1-lon2)*PI()/180))*180/PI())*60*1.8532, 1)  AS MIN_DIS, tb1.customerName,
-ofc1.city AS ofc_city, tb1.city AS customer_city
-FROM 
-(SELECT ST_X(c.customerLocation) AS lat1, ST_Y(c.customerLocation) AS lon1,  ST_X(ofc.officeLocation) AS lat2, ST_X(ofc.officeLocation) AS lon2,
- c.customerNumber, c.customerName,c.city, ofc.officeCode
-FROM customers c, offices ofc) AS tb1, offices ofc1
-WHERE ofc1.city = 'Tokyo';
+AS min_Dis, t1.customerName, o1.city, t1.postalCode FROM
+(SELECT ST_X(customerLocation) AS lat1, ST_Y(customerLocation) AS lon1, 
+ST_X(officeLocation) AS lat2, ST_Y(officeLocation) AS lon2, 
+c.customerName, o.officeCode, c.postalCode FROM Customers c, Offices o) AS t1, Offices o1
+WHERE o1.city = 'Tokyo'
+HAVING min_Dis < 5
+ORDER BY min_Dis, t1.customerName;
 ```
 
 #### Which French customer is furthest from the Paris office
 ```sql
-SELECT ROUND(MAX(ACOS(SIN(lat1*PI()/180)*SIN(lat2*PI()/180)+COS(lat1*PI()/180)*COS(lat2*PI()/180)* COS((lon1-lon2)*PI()/180))*180/PI()*60*1.8532), 1)  AS MAX_DIS, tb1.customerName
-FROM 
-(SELECT ST_X(c.customerLocation) AS lat1, ST_Y(c.customerLocation) AS lon1,  ST_X(ofc.officeLocation) AS lat2, ST_X(ofc.officeLocation) AS lon2,
- c.customerNumber, c.customerName, ofc.city
-FROM customers c, offices ofc
-WHERE ofc.city = 'Paris'
-AND c.country = 'France'
-) AS tb1;
+SELECT ROUND(((ACOS(SIN(t1.lat1*PI()/180)*SIN(t1.lat2*PI()/180)+COS(t1.lat1*PI()/180)*COS(t1.lat2*PI()/180)* COS((t1.lon1-t1.lon2)*PI()/180))*180/PI())*60*1.8532),2)
+AS min_Dis, t1.customerName, t1.city, t1.postalCode FROM
+(SELECT ST_X(customerLocation) AS lat1, ST_Y(customerLocation) AS lon1, 
+ST_X(officeLocation) AS lat2, ST_Y(officeLocation) AS lon2, 
+c.customerName, o.officeCode, c.postalCode, o.city FROM Customers c, Offices o
+WHERE c.country = 'France'
+AND o.city = 'Paris') AS t1
+ORDER BY min_Dis DESC, t1.customerName ASC;
 ```
 
 #### Who is the northernmost customer
+-- 选择latitude值为正数且最大的customer即可 但是max就已经是最大的了 不需要>0的条件
 ```sql
-SELECT ROUND(MAX(ST_X(c.customerLocation)),2) AS lat, customerName
-FROM customers c;
+SELECT MAX(ST_X(customerLocation)) AS lat, customerNumber, customerName FROM Customers;
 ```
 
 #### What is the distance between the Paris and Boston offices
