@@ -879,5 +879,54 @@ WHERE  ST_X(customerLocation) < 0;
 
 #### Which US customers are south west of the New York office
 ```sql
-
+SELECT ST_X(customerLocation) AS Latitude, ST_Y(customerLocation) AS Longitude, customerName, o.state
+FROM customers , Offices o
+WHERE  ST_X(customerLocation) < ST_X(officeLocation)
+AND ST_Y(customerLocation) < ST_Y(officeLocation)
+AND o.state = 'NY';
 ```
+
+#### Which customers are closest to the Tokyo office 
+(i.e., closer to Tokyo than any other office)
+```sql
+SELECT ROUND(MIN(ACOS(SIN(lat1*PI()/180)*SIN(lat2*PI()/180)+COS(lat1*PI()/180)*COS(lat2*PI()/180)* COS((lon1-lon2)*PI()/180))*180/PI())*60*1.8532, 1)  AS MIN_DIS, tb1.customerName,
+ofc1.city AS ofc_city, tb1.city AS customer_city
+FROM 
+(SELECT ST_X(c.customerLocation) AS lat1, ST_Y(c.customerLocation) AS lon1,  ST_X(ofc.officeLocation) AS lat2, ST_X(ofc.officeLocation) AS lon2,
+ c.customerNumber, c.customerName,c.city, ofc.officeCode
+FROM customers c, offices ofc) AS tb1, offices ofc1
+WHERE ofc1.city = 'Tokyo';
+```
+
+#### Which French customer is furthest from the Paris office
+```sql
+SELECT ROUND(MAX(ACOS(SIN(lat1*PI()/180)*SIN(lat2*PI()/180)+COS(lat1*PI()/180)*COS(lat2*PI()/180)* COS((lon1-lon2)*PI()/180))*180/PI()*60*1.8532), 1)  AS MAX_DIS, tb1.customerName
+FROM 
+(SELECT ST_X(c.customerLocation) AS lat1, ST_Y(c.customerLocation) AS lon1,  ST_X(ofc.officeLocation) AS lat2, ST_X(ofc.officeLocation) AS lon2,
+ c.customerNumber, c.customerName, ofc.city
+FROM customers c, offices ofc
+WHERE ofc.city = 'Paris'
+AND c.country = 'France'
+) AS tb1;
+```
+
+#### Who is the northernmost customer
+```sql
+SELECT ROUND(MAX(ST_X(c.customerLocation)),2) AS lat, customerName
+FROM customers c;
+```
+
+#### What is the distance between the Paris and Boston offices
+
+To be precise for long distances, the distance in kilometers, as the crow flies, between two points when you have latitude and longitude, is (ACOS(SIN(lat1*PI()/180)*SIN(lat2*PI()/180)+COS(lat1*PI()/180)*COS(lat2*PI()/180)* COS((lon1-lon2)*PI()/180))*180/PI())*60*1.8532
+
+```sql
+SELECT ROUND(ACOS(SIN(lat1*PI()/180)*SIN(lat2*PI()/180)+COS(lat1*PI()/180)*COS(lat2*PI()/180)* COS((lon1-lon2)*PI()/180))*180/PI()*60*1.8532, 1)  AS DIS
+FROM
+(SELECT ST_X(ofc1.officeLocation) AS lat1, ST_Y(ofc1.officeLocation) AS lon1,  ST_X(ofc.officeLocation) AS lat2, ST_X(ofc.officeLocation) AS lon2
+FROM offices ofc1, offices ofc
+WHERE ofc.city = 'Paris'
+AND ofc1.city = 'Boston'
+) AS tb1;
+```
+
